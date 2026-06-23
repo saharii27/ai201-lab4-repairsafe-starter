@@ -31,4 +31,18 @@ def log_interaction(question: str, tier: str, response: str) -> None:
 
     Design your log entry in specs/auditor-spec.md before implementing here.
     """
-    pass
+    os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+
+    record = {
+        "timestamp": datetime.now().isoformat(),
+        "tier": tier,
+        "question": question[:300],
+        "response_preview": response[:200],
+        "question_length": len(question),
+        "response_length": len(response),
+    }
+
+    with open(LOG_FILE, "a") as f:
+        f.write(json.dumps(record) + "\n")
+
+    print(f'[LOGGED] tier={tier} | "{question[:50]}" → {len(response)} chars')
